@@ -6,10 +6,17 @@
     android:paddingBottom="10dp"
     android:paddingTop="10dp" >
 
-    <ImageView
-        android:layout_marginTop="50dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/wave" />
+    <!--<ImageView-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@drawable/wave" />-->
+    <!--<com.xuhuawei.wavelinedemo.ScreenView-->
+    <!--<com.xuhuawei.wavelinedemo.WavePathView-->
 
+
+    <com.xuhuawei.wavelinedemo.WavePathView
+        android:id="@+id/wavePathView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </LinearLayout>

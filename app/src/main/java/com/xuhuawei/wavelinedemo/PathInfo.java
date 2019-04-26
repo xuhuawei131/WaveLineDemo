@@ -8,14 +8,17 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
+import android.util.Log;
 
 public class PathInfo {
     float mDownX ;
     float mDownY;
     public Path mPath;
+
     public RectF rectF;
     public RectF frameRectF;
     public RectF delRectF;
+
     private Paint mPaint, mBorderPaint;
     private static final int MAX_DISTANCE=8;
     private static final int MAX_BORDER_MARGIN=32;

@@ -9,24 +9,19 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
+import com.xuhuawei.wavelinedemo.paints.BasePathPaint;
+import com.xuhuawei.wavelinedemo.paints.DoodlingPathPaint;
+import com.xuhuawei.wavelinedemo.paints.ExcellentPaint;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class WavePathView extends View {
-    private float mLastX, mLastY;
-    private float mCurrentX, mCurrentY;
-    private Path mPath;
 
-    private static final int MAX_HEIGHT = 8;
-    private static final int MAX_ALL_HEIGHT = MAX_HEIGHT * 2;
-    private static final double FACTORY_SCALE = Math.PI / 18;
-
-
-    private List<PathInfo> arrayList = new ArrayList<>();
-
+    private List<BasePathPaint> arrayList = new ArrayList<>();
+    private BasePathPaint currentInfo;
     private boolean isShowOperateBorader = false;//是否显示操作符和边框
-    private PathInfo currentInfo;
-    private Paint mPaint;
+
     public WavePathView(Context context) {
         super(context);
         init();
@@ -43,30 +38,15 @@ public class WavePathView extends View {
     }
 
     private void init() {
-        //画笔
-        mPaint = new Paint();
-        mPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DITHER_FLAG);
-        mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setFilterBitmap(true);
-        mPaint.setStrokeJoin(Paint.Join.ROUND);
-        mPaint.setStrokeCap(Paint.Cap.ROUND);
-        float mDrawSize = DimenUtils.dp2pxInt(3);
-        mPaint.setStrokeWidth(mDrawSize);
-        mPaint.setColor(0xFF000000);
+
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        //画当前的路径
-        if (mPath != null) {
-            canvas.drawPath(mPath,mPaint);
-        }
         //画以前的路径
-        for (PathInfo path : arrayList) {
-            if (!path.isSamePath(mPath)) {
-                path.drawPath(canvas);
-            }
+        for (BasePathPaint path : arrayList) {
+            path.drawPath(canvas);
         }
         if (isShowOperateBorader &&currentInfo!=null){
             currentInfo.drawFrame(canvas);
@@ -81,73 +61,40 @@ public class WavePathView extends View {
 
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-
                 if (isInController(x, y)) {
                     isShowOperateBorader = true;
                 } else {
                     isShowOperateBorader = false;
+//                    currentInfo=new ExcellentPaint(getContext());
+                    currentInfo=new DoodlingPathPaint(getContext());
+                    currentInfo.onEventDown(x,y);
+                    arrayList.add(currentInfo);
                 }
-                mLastX = x;
-                mLastY = y;
-
-                mCurrentX = x;
-                mCurrentY = y;
-
-                mPath = new Path();
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (!isShowOperateBorader) {
-                    if (Math.abs(x - mLastX) > 5) {
-                        mPath.reset();
-
-                        float moveX = mLastX;
-                        float moveY = getSinY(moveX, mLastY);
-                        mPath.moveTo(moveX, moveY);
-
-                        for (float i = mLastX; i < x; i += 5) {
-                            moveX = i;
-                            moveY = getSinY(moveX, mLastY);
-                            mPath.lineTo(moveX, moveY);
-                        }
-                        mCurrentX = x;
-                        mCurrentY = y;
-                        invalidate();
-                    }
+                    currentInfo.onEventMove(x,y);
+                    invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (!isShowOperateBorader) {
-                    PathInfo info = new PathInfo(mLastX, mLastY,getContext());
-                    info.setEndPoint(x, mPath);
-                    arrayList.add(info);
+                    currentInfo.onEventUp(x,y);
                     invalidate();
                 }else{
-                    if (isInDelete(x,y)){
-                        Toast.makeText(getContext(),"点击删除",Toast.LENGTH_SHORT).show();
-                    }
+//                    if (isInDelete(x,y)){
+//                        Toast.makeText(getContext(),"点击删除",Toast.LENGTH_SHORT).show();
+//                    }
                 }
                 currentInfo=null;
                 break;
             case MotionEvent.ACTION_CANCEL:
                 currentInfo=null;
-                mPath.reset();
                 invalidate();
                 break;
         }
         return true;
-    }
-
-    /**
-     * 获取sin值
-     *
-     * @param moveX
-     * @param mCurrentY
-     * @return
-     */
-    private float getSinY(float moveX, float mCurrentY) {
-        float moveY = (int) (MAX_ALL_HEIGHT * Math.sin(moveX * FACTORY_SCALE) + mCurrentY);
-        return moveY;
     }
 
     /**
@@ -158,7 +105,7 @@ public class WavePathView extends View {
      * @return
      */
     private boolean isInController(float x, float y) {
-        for (PathInfo info : arrayList) {
+        for (BasePathPaint info : arrayList) {
             if (info.isInPathRect(x, y)) {
                 currentInfo=info;
                 return true;

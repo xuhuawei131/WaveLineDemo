@@ -3,16 +3,13 @@ package com.xuhuawei.wavelinedemo.paints;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.RectF;
 
-import com.xuhuawei.wavelinedemo.Const;
 import com.xuhuawei.wavelinedemo.DimenUtils;
 
-public class ExcellentPaint extends BaseTeachPathPaint {
-    public ExcellentPaint(Context context) {
+public class PromingPaint extends BaseTeachPathPaint {
+    public PromingPaint(Context context) {
         super(context);
     }
-
     @Override
     protected void initPaint(Context context) {
         super.initPaint(context);
@@ -28,8 +25,7 @@ public class ExcellentPaint extends BaseTeachPathPaint {
     }
 
     @Override
-    protected float getTransformY(float moveX,float moveY) {
-        moveY = (int) (Const.MAX_ALL_HEIGHT * Math.sin(moveX * Const.FACTORY_SCALE) + startY);
-        return moveY;
+    protected float getTransformY(float x, float y) {
+        return y;
     }
 }

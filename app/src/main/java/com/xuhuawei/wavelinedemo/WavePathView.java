@@ -12,6 +12,7 @@ import android.widget.Toast;
 import com.xuhuawei.wavelinedemo.paints.BasePathPaint;
 import com.xuhuawei.wavelinedemo.paints.DoodlingPathPaint;
 import com.xuhuawei.wavelinedemo.paints.ExcellentPaint;
+import com.xuhuawei.wavelinedemo.paints.PromingPaint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +22,7 @@ public class WavePathView extends View {
     private List<BasePathPaint> arrayList = new ArrayList<>();
     private BasePathPaint currentInfo;
     private boolean isShowOperateBorader = false;//是否显示操作符和边框
+    private int pathStyle = 0;//0优秀、1待提高、2、涂鸦
 
     public WavePathView(Context context) {
         super(context);
@@ -36,11 +38,13 @@ public class WavePathView extends View {
         super(context, attrs, defStyleAttr);
         init();
     }
-
     private void init() {
 
     }
 
+    public void setPathStyle(int pathStyle) {
+        this.pathStyle=pathStyle;
+    }
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
@@ -48,8 +52,22 @@ public class WavePathView extends View {
         for (BasePathPaint path : arrayList) {
             path.drawPath(canvas);
         }
-        if (isShowOperateBorader &&currentInfo!=null){
+        if (isShowOperateBorader && currentInfo != null) {
             currentInfo.drawFrame(canvas);
+        }
+    }
+
+
+    private BasePathPaint getPathPaintByStyle() {
+        switch (pathStyle) {
+            case 0:
+                return new ExcellentPaint(getContext());
+            case 1:
+                return new PromingPaint(getContext());
+            case 2:
+                return new DoodlingPathPaint(getContext());
+            default:
+                return new ExcellentPaint(getContext());
         }
     }
 
@@ -65,32 +83,31 @@ public class WavePathView extends View {
                     isShowOperateBorader = true;
                 } else {
                     isShowOperateBorader = false;
-//                    currentInfo=new ExcellentPaint(getContext());
-                    currentInfo=new DoodlingPathPaint(getContext());
-                    currentInfo.onEventDown(x,y);
+                    currentInfo = getPathPaintByStyle();
+                    currentInfo.onEventDown(x, y);
                     arrayList.add(currentInfo);
                 }
                 invalidate();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (!isShowOperateBorader) {
-                    currentInfo.onEventMove(x,y);
+                    currentInfo.onEventMove(x, y);
                     invalidate();
                 }
                 break;
             case MotionEvent.ACTION_UP:
                 if (!isShowOperateBorader) {
-                    currentInfo.onEventUp(x,y);
+                    currentInfo.onEventUp(x, y);
                     invalidate();
-                }else{
-//                    if (isInDelete(x,y)){
-//                        Toast.makeText(getContext(),"点击删除",Toast.LENGTH_SHORT).show();
-//                    }
+                } else {
+                    if (isInDelete(x, y)) {
+                        Toast.makeText(getContext(), "点击删除", Toast.LENGTH_SHORT).show();
+                    }
                 }
-                currentInfo=null;
+                currentInfo = null;
                 break;
             case MotionEvent.ACTION_CANCEL:
-                currentInfo=null;
+                currentInfo = null;
                 invalidate();
                 break;
         }
@@ -107,12 +124,13 @@ public class WavePathView extends View {
     private boolean isInController(float x, float y) {
         for (BasePathPaint info : arrayList) {
             if (info.isInPathRect(x, y)) {
-                currentInfo=info;
+                currentInfo = info;
                 return true;
             }
         }
         return false;
     }
+
     /**
      * 是否点击了控制按钮
      *
@@ -121,8 +139,8 @@ public class WavePathView extends View {
      * @return
      */
     private boolean isInDelete(float x, float y) {
-        if (currentInfo!=null){
-            return currentInfo.isInDelRect(x,y);
+        if (currentInfo != null) {
+            return currentInfo.isInDelRect(x, y);
         }
         return false;
     }

@@ -94,6 +94,7 @@ public class WavePathView extends View {
                     isShowOperateBorader = true;
                 } else {
                     isShowOperateBorader = false;
+
                     currentInfo = getPathPaintByStyle();
                     currentInfo.onEventDown(x, y);
 
@@ -123,7 +124,10 @@ public class WavePathView extends View {
                     invalidate();
                 } else {
                     if (isInDelete(x, y)) {
-                        Toast.makeText(getContext(), "点击删除", Toast.LENGTH_SHORT).show();
+                        arrayList.remove(currentInfo);
+                        currentInfo=null;
+                        isShowOperateBorader=false;
+                        invalidate();
                     }
                 }
                 currentInfo = null;

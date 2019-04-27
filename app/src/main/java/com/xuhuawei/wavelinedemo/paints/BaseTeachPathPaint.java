@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.util.Log;
 
 import com.xuhuawei.wavelinedemo.Const;
 import com.xuhuawei.wavelinedemo.DimenUtils;
@@ -18,6 +19,7 @@ public abstract class BaseTeachPathPaint extends BasePathPaint {
     protected int delBitmapHeight;
     protected Paint mBorderPaint;
     protected RectF delRectF;
+    protected RectF clickDelRectF;
 
     public BaseTeachPathPaint(Context context) {
         super(context);
@@ -65,16 +67,19 @@ public abstract class BaseTeachPathPaint extends BasePathPaint {
                 startX +distance,
                 startY + Const.MAX_DISTANCE);
         //边框范围
-        frameRectF= new RectF(startX ,startY-Const.MAX_BORDER_MARGIN,
-                startX +distance,
+        frameRectF= new RectF(startX-Const.MAX_BORDER_MARGIN ,startY-Const.MAX_BORDER_MARGIN,
+                startX +distance+Const.MAX_BORDER_MARGIN,
                 startY + Const.MAX_BORDER_MARGIN);
 
         //删除按钮范围
-        float left=startX+distance-delBitmapWidth/2;
-        float top=startY-Const.MAX_BORDER_MARGIN-delBitmapHeight/2;
+        float left=frameRectF.right-delBitmapWidth/2;
+        float top=frameRectF.top-delBitmapHeight/2;
         float right=left+delBitmapWidth;
         float bottom=top+delBitmapHeight;
         delRectF= new RectF(left ,top, right, bottom);
+
+        //删除按钮的点击范围
+        clickDelRectF= new RectF(left-Const.MAX_DEL_BORDER_MARGIN ,top-Const.MAX_DEL_BORDER_MARGIN, right+Const.MAX_DEL_BORDER_MARGIN, bottom+Const.MAX_DEL_BORDER_MARGIN);
     }
     @Override
     public void onEventCancel(float x, float y) {
@@ -84,7 +89,7 @@ public abstract class BaseTeachPathPaint extends BasePathPaint {
 
     @Override
     public boolean isInPathRect(float x, float y) {
-        if (rectF!=null&&rectF.contains(x, y)) {
+        if (frameRectF!=null&&frameRectF.contains(x, y)) {
             return true;
         }else{
             return false;
@@ -92,7 +97,8 @@ public abstract class BaseTeachPathPaint extends BasePathPaint {
     }
     @Override
     public boolean isInDelRect(float x, float y) {
-        if (delRectF!=null&&delRectF.contains(x, y)) {
+        Log.v("xhw","clickDelRectF "+clickDelRectF.toString()+" ("+x+","+y+")");
+        if (clickDelRectF!=null&&clickDelRectF.contains(x, y)) {
             return true;
         }else{
             return false;

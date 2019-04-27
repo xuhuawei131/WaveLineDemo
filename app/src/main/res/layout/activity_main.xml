@@ -3,14 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingBottom="10dp"
-    android:paddingTop="10dp" >
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp">
 
     <!--<ImageView-->
-        <!--android:layout_marginTop="50dp"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@drawable/wave" />-->
+    <!--android:layout_marginTop="50dp"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/wave" />-->
     <!--<com.xuhuawei.wavelinedemo.ScreenView-->
     <!--<com.xuhuawei.wavelinedemo.WavePathView-->
 
@@ -18,27 +18,52 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp">
+
         <Button
             android:id="@+id/btn_0"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="优秀"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="优秀" />
+
         <Button
             android:id="@+id/btn_1"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="待提高"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="待提高" />
 
         <Button
             android:id="@+id/btn_2"
-            android:layout_weight="1"
             android:layout_width="0dp"
-            android:text="涂鸦"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="涂鸦" />
     </LinearLayout>
-    
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/btn_undo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="Undo" />
+
+        <TextView
+            android:id="@+id/btn_redo"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:enabled="false"
+            android:gravity="center"
+            android:text="Redo" />
+    </LinearLayout>
+
     <com.xuhuawei.wavelinedemo.WavePathView
         android:id="@+id/wavePathView"
         android:layout_width="match_parent"

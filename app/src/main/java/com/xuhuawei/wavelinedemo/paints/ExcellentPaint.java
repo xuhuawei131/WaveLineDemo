@@ -8,6 +8,9 @@ import android.graphics.RectF;
 import com.xuhuawei.wavelinedemo.Const;
 import com.xuhuawei.wavelinedemo.DimenUtils;
 
+/**
+ * 优秀的画笔
+ */
 public class ExcellentPaint extends BaseTeachPathPaint {
     public ExcellentPaint(Context context) {
         super(context);
